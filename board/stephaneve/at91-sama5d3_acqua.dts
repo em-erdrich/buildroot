@@ -6,6 +6,7 @@
 /dts-v1/;
 #include "sama5d31.dtsi"
 #include "sama5d3xmb.dtsi"
+#include "sama5d3xdm.dtsi"
 
 
 / {
@@ -114,8 +115,18 @@
 			};
 
 			macb1: ethernet@f802c000 {
-				status = "okay";
+    				pinctrl-names = "default";
+    				//pinctrl-0 = <&pinctrl_macb0_default &pinctrl_macb0_phy_irq>;
+    				phy-mode = "rmii";
+    				status = "okay";
+
+    				ethernet-phy@1 {
+        				reg = <0x1>;
+        				interrupt-parent = <&pioA>;
+        				interrupts = <73 IRQ_TYPE_LEVEL_LOW>;
+    				};
 			};
+
 		};
 	};
 
