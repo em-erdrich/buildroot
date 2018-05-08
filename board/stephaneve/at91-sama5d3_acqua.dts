@@ -161,10 +161,10 @@
 
     panel: panel {
         /* compatible = "acme,43inch", "simple-panel"; */
-        /* compatible = "acme,50inch", "simple-panel"; */
+           compatible = "acme,50inch", "simple-panel"; 
         /* compatible = "acme,70inch", "simple-panel"; */
         
-        status = "disabled";
+        status = "okay";
 
         port@0 {
             panel_input: endpoint@0 {
