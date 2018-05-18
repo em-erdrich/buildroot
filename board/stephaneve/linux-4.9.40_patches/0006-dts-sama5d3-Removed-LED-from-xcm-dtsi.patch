@@ -1,0 +1,34 @@
+From 03ff6b527d7adfb0acac2a4c227c06949d35ff87 Mon Sep 17 00:00:00 2001
+From: Frank Erdrich <frank.erdrich@emtrion.de>
+Date: Fri, 18 May 2018 09:06:02 +0200
+Subject: [PATCH] dts: sama5d3: Removed LED from xcm dtsi.
+
+This is a bad way to fix a pin conflict. There should be a complete set
+of dtsi files for the fritzstephan baseboard instead of using the ones
+created for the sama5d3_xplained.
+---
+ arch/arm/boot/dts/sama5d3xcm.dtsi | 10 ----------
+ 1 file changed, 10 deletions(-)
+
+diff --git a/arch/arm/boot/dts/sama5d3xcm.dtsi b/arch/arm/boot/dts/sama5d3xcm.dtsi
+index b5e111b29da1..296010ba5d48 100644
+--- a/arch/arm/boot/dts/sama5d3xcm.dtsi
++++ b/arch/arm/boot/dts/sama5d3xcm.dtsi
+@@ -76,14 +76,4 @@
+ 			};
+ 		};
+ 	};
+-
+-	leds {
+-		compatible = "gpio-leds";
+-
+-		d2 {
+-			label = "d2";
+-			gpios = <&pioE 25 GPIO_ACTIVE_LOW>;	/* PE25, conflicts with A25, RXD2 */
+-			linux,default-trigger = "heartbeat";
+-		};
+-	};
+ };
+-- 
+2.11.0
+
