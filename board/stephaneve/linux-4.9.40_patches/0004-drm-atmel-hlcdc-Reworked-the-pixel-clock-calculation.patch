@@ -1,0 +1,50 @@
+From 2cb3f4e4c7e73be3ce00cae6b3bb26ac4386dd88 Mon Sep 17 00:00:00 2001
+From: Frank Erdrich <frank.erdrich@emtrion.de>
+Date: Thu, 17 May 2018 12:01:07 +0200
+Subject: [PATCH] drm: atmel-hlcdc: Reworked the pixel clock calculation.
+
+The calculated divisor for the pixel clock produces in some cases an
+error of around 50% to the pixel clock that was choosen. If we, for
+example, want to have a pixel clock of 65 MHz, the divisor would be 3
+which leads to a resulting pixel clock of 44 MHz, which is 47.73 % off
+of the pixel clock that we wanted to have.
+
+To minimize that error, two calculations of the divisor are done, one as
+simple division, the other with DIV_ROUND_UP. The resulting divisor with
+the smallest error is used.
+---
+ drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
+index 9b17a66cf0e1..467eb76b8bf8 100644
+--- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
++++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
+@@ -81,7 +81,7 @@ static void atmel_hlcdc_crtc_mode_set_nofb(struct drm_crtc *c)
+ 	struct videomode vm;
+ 	unsigned long prate;
+ 	unsigned int cfg;
+-	int div;
++	int div, rdiv;
+ 
+ 	vm.vfront_porch = adj->crtc_vsync_start - adj->crtc_vdisplay;
+ 	vm.vback_porch = adj->crtc_vtotal - adj->crtc_vsync_end;
+@@ -112,7 +112,14 @@ static void atmel_hlcdc_crtc_mode_set_nofb(struct drm_crtc *c)
+ 		cfg |= ATMEL_HLCDC_CLKSEL;
+ 	}
+ 
+-	div = DIV_ROUND_UP(prate, mode_rate);
++	rdiv = DIV_ROUND_UP(prate, mode_rate);
++	div = prate / mode_rate;
++
++	/* get the best divisor with the lowest error */
++	if (abs(mode_rate - (prate / rdiv)) < abs(mode_rate - (prate / div))) {
++		div = rdiv;
++	}
++
+ 	if (div < 2)
+ 		div = 2;
+ 
+-- 
+2.11.0
+

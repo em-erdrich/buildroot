@@ -1,0 +1,27 @@
+From 6627699fb4724d1f71ed4e1c51d49d04a3bf9d03 Mon Sep 17 00:00:00 2001
+From: Frank Erdrich <frank.erdrich@emtrion.de>
+Date: Thu, 17 May 2018 12:25:13 +0200
+Subject: [PATCH] drm: atmel-hlcdc: Reversed pixel clock polarity.
+
+Reversing the pixel clock polarity (data/control signal launch on
+falling edge of pixel clock) for a better/sharper image on screen.
+Project specific setting for the meddp-515 screen.
+---
+ drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
+index 467eb76b8bf8..4e3ee14d676c 100644
+--- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
++++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
+@@ -124,6 +124,7 @@ static void atmel_hlcdc_crtc_mode_set_nofb(struct drm_crtc *c)
+ 		div = 2;
+ 
+ 	cfg |= ATMEL_HLCDC_CLKDIV(div);
++	cfg |= ATMEL_HLCDC_CLKPOL;
+ 
+ 	regmap_update_bits(regmap, ATMEL_HLCDC_CFG(0),
+ 			   ATMEL_HLCDC_CLKSEL | ATMEL_HLCDC_CLKDIV_MASK |
+-- 
+2.11.0
+

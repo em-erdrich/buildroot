@@ -1,1 +1,7 @@
 linux-4.9.40.patch
+0001-drm-panel-Added-inovis-meddp-515-1024x768-panel.patch
+0002-drm-panel-Added-check-for-not-initialized-regulator.patch
+0003-drm-atmel-hlcdc-Rework-the-fbdev-creation-logic.patch
+0004-drm-atmel-hlcdc-Reworked-the-pixel-clock-calculation.patch
+0005-drm-atmel-hlcdc-Reversed-pixel-clock-polarity.patch
+

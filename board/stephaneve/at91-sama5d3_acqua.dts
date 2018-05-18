@@ -156,20 +156,32 @@
 			gpios = <&pioE 6 GPIO_ACTIVE_LOW>;
 			linux,default-trigger = "mmc0";
 		};
+	};
 
+	panel_reg: panel_regulator {
+		compatible = "regulator-fixed";
+		regulator-name = "panel-power-supply";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		status = "okay";
 	};
 
     panel: panel {
-        /* compatible = "acme,43inch", "simple-panel"; */
-           compatible = "acme,50inch", "simple-panel"; 
-        /* compatible = "acme,70inch", "simple-panel"; */
-        
-        status = "okay";
+		compatible = "inovis,meddp515", "simple-panel";
+		#address-cells = <1>;
+		#size-cells = <0>;
+		power-supply = <&panel_reg>;
+		status = "okay";
 
-        port@0 {
-            panel_input: endpoint@0 {
-                remote-endpoint = <&hlcdc_panel_output>;
-            };
-        };
-    };
+		port@0 {
+			reg = <0>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			panel_input: endpoint@0 {
+				reg = <0>;
+				remote-endpoint = <&hlcdc_panel_output>;
+			};
+		};
+	};
 };

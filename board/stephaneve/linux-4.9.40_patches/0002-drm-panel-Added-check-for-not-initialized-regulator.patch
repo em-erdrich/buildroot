@@ -1,0 +1,43 @@
+From 69caa1e2bfc4d706f93d180b484092aae02f93bf Mon Sep 17 00:00:00 2001
+From: Frank Erdrich <frank.erdrich@emtrion.de>
+Date: Thu, 17 May 2018 16:51:32 +0200
+Subject: [PATCH] drm: panel: Added check for not initialized regulator.
+
+---
+ drivers/gpu/drm/panel/panel-simple.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 1c48976a4baa..23640f54faab 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -190,7 +190,8 @@ static int panel_simple_unprepare(struct drm_panel *panel)
+ 	if (p->enable_gpio)
+ 		gpiod_set_value_cansleep(p->enable_gpio, 0);
+ 
+-	regulator_disable(p->supply);
++	if (p->supply)
++		regulator_disable(p->supply);
+ 
+ 	if (p->desc->delay.unprepare)
+ 		msleep(p->desc->delay.unprepare);
+@@ -208,10 +209,12 @@ static int panel_simple_prepare(struct drm_panel *panel)
+ 	if (p->prepared)
+ 		return 0;
+ 
+-	err = regulator_enable(p->supply);
+-	if (err < 0) {
+-		dev_err(panel->dev, "failed to enable supply: %d\n", err);
+-		return err;
++	if (p->supply) {
++		err = regulator_enable(p->supply);
++		if (err < 0) {
++			dev_err(panel->dev, "failed to enable supply: %d\n", err);
++			return err;
++		}
+ 	}
+ 
+ 	if (p->enable_gpio)
+-- 
+2.11.0
+

@@ -1,0 +1,58 @@
+From 4a12b8b3dc41d5186a32ae82ea3dedbc65a1844f Mon Sep 17 00:00:00 2001
+From: Frank Erdrich <frank.erdrich@emtrion.de>
+Date: Thu, 17 May 2018 16:39:26 +0200
+Subject: [PATCH] drm: panel: Added inovis meddp-515 1024x768 panel.
+
+---
+ drivers/gpu/drm/panel/panel-simple.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index fa3e999c2364..1c48976a4baa 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -1627,6 +1627,31 @@ static const struct panel_desc acme_70inch = {
+ 	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
+ };
+ 
++static const struct drm_display_mode inovis_meddp515_mode = {
++	.clock = 65000,
++	.hdisplay = 1024,
++	.hsync_start = 1024 + 24,
++	.hsync_end = 1024 + 24 + 63,
++	.htotal = 1024 + 24 + 63 + 233,
++	.vdisplay = 768,
++	.vsync_start = 768 + 3,
++	.vsync_end = 768 + 3 + 6,
++	.vtotal = 768 + 3 + 6 + 29,
++	.vrefresh = 60,
++	.flags = DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC,
++};
++
++static const struct panel_desc inovis_meddp515 = {
++	.modes = &inovis_meddp515_mode,
++	.num_modes = 1,
++	.bpc = 8,
++	.size = {
++		.width = 300,
++		.height = 225,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
++};
++
+ static const struct of_device_id platform_of_match[] = {
+ 	{
+ 		.compatible = "ampire,am800480r3tmqwa1h",
+@@ -1797,6 +1822,9 @@ static const struct of_device_id platform_of_match[] = {
+ 		.compatible = "acme,70inch",
+ 		.data = &acme_70inch,
+ 	}, {
++		.compatible = "inovis,meddp515",
++		.data = &inovis_meddp515,
++	}, {
+ 		/* sentinel */
+ 	}
+ };
+-- 
+2.11.0
+
