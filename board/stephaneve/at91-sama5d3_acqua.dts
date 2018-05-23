@@ -132,8 +132,6 @@
 
     				ethernet-phy@1 {
         				reg = <0x1>;
-        				interrupt-parent = <&pioA>;
-        				interrupts = <73 IRQ_TYPE_LEVEL_LOW>;
     				};
 			};
 
